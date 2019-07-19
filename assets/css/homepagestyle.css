@@ -1,0 +1,31 @@
+#grad1 {
+    height: 100vh;
+    background-color: #4383c3;
+    background-image: linear-gradient(to right, #4383c3, #2fb4cb);
+}
+
+
+.propImage {
+    width: 8vw;
+    height: 6vw;
+    text-align: center;
+    margin: 10px;
+    /* padding: 10px; */
+}
+
+.gameTitle{
+    font-family: 'Alfa Slab One', cursive;
+    font-size: 40px;
+    text-align: center;
+    margin: 130px;
+}
+
+.signupform-hidden{
+    visibility: hidden;
+}
+
+#player-list{
+    color: red;
+    font-style: italic;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif
+}
