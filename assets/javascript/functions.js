@@ -30,17 +30,16 @@ function addPlayerToList(latestPlayer) {
   );
 }
 
-
 function setPlayerStatus(playerName, playerStatus, updateDatabase) {
   if (playerStatus == "Available") {
     $('[status="' + playerStatus + '"]').addClass("btn-success");
   } else {
-      console.log("Player status is not available" + playerStatus)
-      $('[buttonname="' + playerName + '"]')
+    console.log("Player status is not available" + playerStatus);
+    $('[buttonname="' + playerName + '"]')
       .attr("status", playerStatus)
       .attr("disabled", true)
       .text(playerStatus)
-      .addClass("btn-warning")
+      .addClass("btn-warning");
   }
 
   if (updateDatabase) {
@@ -53,35 +52,31 @@ function setPlayerStatus(playerName, playerStatus, updateDatabase) {
           childSnapshot.ref.update({ playerStatus: playerStatus });
         });
       });
+  }
+}
 
+function displayPlayersArea(playerName, opponentName) {
+  if (sessionStorage.getItem("player") == playerName) {
+    $(".player-name").text(playerName);
+    $(".player-message").text("Take your Pick...");
 
+    $(".opponent-name").text(opponentName);
+    $(".opponent-choices").css("visibility", "hidden");
+    $(".opponent-message").text("Waiting for " + playerName + "'s pick...");
+  } else {
+    $(".player-name").text(playerName);
+    $(".player-message").text("Waiting for " + opponentName + "'s pick...");
+    $(".player-choices").css("visibility", "hidden");
+
+    $(".opponent-name").text(opponentName);
+    $(".opponent-message").text("Take your Pick...");
   }
 
+  // var timer = 15;
+
+  // var interval = setInterval(function() {
+  //     timer--;
+  //     $('.player-timer').text(timer);
+  //     if (timer === 0) clearInterval(interval);
+  // }, 1000);
 }
-
-function  displayPlayersArea(){
-  $('.player-name').text("ABC")
-
-  var timer = 15;
-
-  var interval = setInterval(function() {
-      timer--;
-      $('.player-timer').text(timer);
-      if (timer === 0) clearInterval(interval);
-  }, 1000);
-  
-}
-
-function  displayOpponentsArea(){
-  $('.opponent-name').text("XYZ");
-
-  var timer = 15;
-
-  var interval = setInterval(function() {
-      timer--;
-      $('.opponent-timer').text(timer);
-      if (timer === 0) clearInterval(interval);
-  }, 1000);
-  
-}
-
