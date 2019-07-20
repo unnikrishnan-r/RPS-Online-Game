@@ -80,3 +80,94 @@ function displayPlayersArea(playerName, opponentName) {
   //     if (timer === 0) clearInterval(interval);
   // }, 1000);
 }
+
+function recordGameScore(currentRound, role, gameId, choice) {
+  if (role == "player") {
+    database
+      .ref("/currentGame")
+      .child(gameId)
+      .child(currentRound)
+      .update({ playerChoice: choice });
+  } else {
+    database
+      .ref("/currentGame")
+      .child(gameId)
+      .child(currentRound)
+      .update({ opponentChoice: choice });
+  }
+}
+
+function loadCurrentGame(gameId) {
+  database
+    .ref("/currentGame")
+    .child(gameId)
+    .once("value", function(snapshot) {
+      console.log("Going to load the game");
+      console.log(snapshot.val());
+      console.log("Display Game Area");
+      displayPlayersArea(
+        snapshot.val().playerName,
+        snapshot.val().opponentName
+      );
+      currentGame++;
+      currentRound = "round" + currentGame;
+    });
+}
+
+function evaluateChoices(playerChoice, opponentChoice) {
+  var rock = "rock";
+  var paper = "paper";
+  var scissors = "scissors";
+
+  if (playerChoice === opponentChoice) {
+    return 0;
+    console.log("Game is a Tie");
+  } else {
+    if (playerChoice === rock) {
+      if (opponentChoice === scissors) {
+        return 1;
+      } else {
+        return 2;
+      }
+    } else {
+      if (playerChoice === scissors) {
+        if (opponentChoice === paper) {
+          return 1;
+        } else {
+          return 2;
+        }
+      } else {
+        if (playerChoice === paper) {
+          if (opponentChoice === rock) {
+            return 1;
+          } else {
+            return 2;
+          }
+        }
+      }
+    }
+  }
+}
+
+function updateRoundWinner(result, gameId, currentRound) {
+  database
+    .ref("/currentGame")
+    .child(gameId)
+    .child(currentRound)
+    .update({ result: result });
+
+  switch (result) {
+    case 1:
+      $(".player-star-1").addClass("winning-star");
+      $(".player-message").text("You Won this round!!");
+      $(".opponent-message").text("Sorry, you lost..");
+
+      break;
+
+    case 2:
+      $(".opponent-star-1").addClass("winning-star");
+      $(".opponent-message").text("You Won this round!!");
+      $(".player-message").text("Sorry, you lost..");
+      break;
+  }
+}

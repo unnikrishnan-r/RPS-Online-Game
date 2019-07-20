@@ -4,9 +4,15 @@
     background-image: linear-gradient(to right, #4383c3, #2fb4cb);
 }
 
-.fa-stack .fa-circle{
-    color: gold;
+
+  .winning-star {
+      color: gold !important
   }
+
+  .fa-stack .fa-circle{
+    color: white;
+  }
+
 
 .scoring-icon, .player-choices, .opponent-choices{
     margin: 40px;
@@ -62,4 +68,8 @@
 
   .player-message, .opponent-message{
       font-size: 1.5em;
+  }
+
+  .redborder{
+      border: 2px solid red
   }
