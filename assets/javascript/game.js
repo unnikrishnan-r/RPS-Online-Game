@@ -1,21 +1,21 @@
-  // Your web app's Firebase configuration
-  var currentPlayer = sessionStorage.getItem("player");
-  var firebaseConfig = {
-    apiKey: "AIzaSyD9yMLeEgizfj8K-VGWxEhL917i1a6NZHw",
-    authDomain: "rps-online-game-5c875.firebaseapp.com",
-    databaseURL: "https://rps-online-game-5c875.firebaseio.com",
-    projectId: "rps-online-game-5c875",
-    storageBucket: "rps-online-game-5c875.appspot.com",
-    messagingSenderId: "385426380061",
-    appId: "1:385426380061:web:630be7a60d653644"
-  };
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  var database = firebase.database();
-  console.log("Connected to DB");
+// Your web app's Firebase configuration
+var currentPlayer = sessionStorage.getItem("player");
+var firebaseConfig = {
+  apiKey: "AIzaSyD9yMLeEgizfj8K-VGWxEhL917i1a6NZHw",
+  authDomain: "rps-online-game-5c875.firebaseapp.com",
+  databaseURL: "https://rps-online-game-5c875.firebaseio.com",
+  projectId: "rps-online-game-5c875",
+  storageBucket: "rps-online-game-5c875.appspot.com",
+  messagingSenderId: "385426380061",
+  appId: "1:385426380061:web:630be7a60d653644"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+var database = firebase.database();
+console.log("Connected to DB");
 //****************************************************************************** */
-  $(document).ready(function() {
-
+$(document).ready(function() {
+  
   $("#add-player").on("click", function() {
     console.log("Clicked Add Player");
     event.preventDefault();
@@ -56,13 +56,29 @@
         childSnapshot.val().opponentName === sessionStorage.getItem("player") ||
         childSnapshot.val().playerName === sessionStorage.getItem("player")
       ) {
-        console.log("Matched")
+        console.log("Matched");
         sessionStorage.setItem("gameId", childSnapshot.key);
-        $("#player-list").text(childSnapshot.val().playerName + " vs " + childSnapshot.val().opponentName);
-        setPlayerStatus(childSnapshot.val().playerName , "Game In Progress", true);
-        setPlayerStatus(childSnapshot.val().opponentName , "Game In Progress", true);
-
-        window.open("game.html", "_blank");
+        $("#player-list").text(
+          childSnapshot.val().playerName +
+            " vs " +
+            childSnapshot.val().opponentName
+        );
+        setPlayerStatus(
+          childSnapshot.val().playerName,
+          "Game In Progress",
+          true
+        );
+        setPlayerStatus(
+          childSnapshot.val().opponentName,
+          "Game In Progress",
+          true
+        );
+        var gameStarted = true;
+          if (gameStarted) {
+            gameStarted = false;
+            console.log("About to open a new Window");
+            // window.open("game.html", "_blank");
+        };
       }
     });
   });

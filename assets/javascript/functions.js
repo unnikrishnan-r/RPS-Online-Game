@@ -32,17 +32,6 @@ function addPlayerToList(latestPlayer) {
 
 
 function setPlayerStatus(playerName, playerStatus, updateDatabase) {
-  if (updateDatabase) {
-    database
-      .ref("/onlinePlayerList")
-      .orderByChild("playerName")
-      .equalTo(playerName)
-      .once("value", function(snapshot) {
-        snapshot.forEach(function(childSnapshot) {
-          childSnapshot.ref.update({ playerStatus: playerStatus });
-        });
-      });
-  }
   if (playerStatus == "Available") {
     $('[status="' + playerStatus + '"]').addClass("btn-success");
   } else {
@@ -53,4 +42,19 @@ function setPlayerStatus(playerName, playerStatus, updateDatabase) {
       .text(playerStatus)
       .addClass("btn-warning")
   }
+
+  if (updateDatabase) {
+    database
+      .ref("/onlinePlayerList")
+      .orderByChild("playerName")
+      .equalTo(playerName)
+      .once("value", function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          childSnapshot.ref.update({ playerStatus: playerStatus });
+        });
+      });
+
+
+  }
+
 }
