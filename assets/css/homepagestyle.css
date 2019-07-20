@@ -4,6 +4,22 @@
     background-image: linear-gradient(to right, #4383c3, #2fb4cb);
 }
 
+.fa-stack .fa-circle{
+    color: gold;
+  }
+
+.scoring-icon, .player-choices, .opponent-choices{
+    margin: 40px;
+}
+
+.scoring-icon-hidden{
+    visibility: hidden;
+}
+.player-choice-image, .opponent-choice-image {
+    width: 8vw;
+    height: 6vw;
+    text-align: center;
+}
 
 .propImage {
     width: 8vw;
@@ -13,19 +29,37 @@
     /* padding: 10px; */
 }
 
-.gameTitle{
+.gameTitle {
     font-family: 'Alfa Slab One', cursive;
     font-size: 40px;
     text-align: center;
     margin: 130px;
 }
 
-.signupform-hidden{
+.player-name, .opponent-name {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 30px;
+    color: white;
+    padding: 20px;
+}
+
+.signupform-hidden {
     visibility: hidden;
 }
 
-#player-list{
+#player-list {
     color: red;
     font-style: italic;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif
 }
+
+.player-timer , .opponent-timer {
+    font-size: 2.5em;
+    padding: 10px;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .player-message, .opponent-message{
+      font-size: 1.5em;
+  }

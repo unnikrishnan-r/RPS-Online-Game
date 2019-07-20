@@ -58,3 +58,30 @@ function setPlayerStatus(playerName, playerStatus, updateDatabase) {
   }
 
 }
+
+function  displayPlayersArea(){
+  $('.player-name').text("ABC")
+
+  var timer = 15;
+
+  var interval = setInterval(function() {
+      timer--;
+      $('.player-timer').text(timer);
+      if (timer === 0) clearInterval(interval);
+  }, 1000);
+  
+}
+
+function  displayOpponentsArea(){
+  $('.opponent-name').text("XYZ");
+
+  var timer = 15;
+
+  var interval = setInterval(function() {
+      timer--;
+      $('.opponent-timer').text(timer);
+      if (timer === 0) clearInterval(interval);
+  }, 1000);
+  
+}
+
