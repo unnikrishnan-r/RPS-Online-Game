@@ -15,7 +15,6 @@ var database = firebase.database();
 console.log("Connected to DB");
 //****************************************************************************** */
 $(document).ready(function() {
-  
   $("#add-player").on("click", function() {
     console.log("Clicked Add Player");
     event.preventDefault();
@@ -74,11 +73,11 @@ $(document).ready(function() {
           true
         );
         var gameStarted = true;
-          if (gameStarted) {
-            gameStarted = false;
-            console.log("About to open a new Window");
-            // window.open("game.html", "_blank");
-        };
+        if (gameStarted) {
+          gameStarted = false;
+          console.log("About to open a new Window");
+          // window.open("game.html", "_blank");
+        }
       }
     });
   });
