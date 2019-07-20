@@ -12,6 +12,7 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 var database = firebase.database();
+var gameInProgress = false;
 console.log("Connected to DB");
 //****************************************************************************** */
 $(document).ready(function() {
@@ -39,6 +40,9 @@ $(document).ready(function() {
 
   $("body").on("click", ".playerbutton", function() {
     // beginGame(currentPlayer , $(this).attr("buttonname"))
+    console.log("Clicked Player Button")
+    gameInProgress = true;
+
     database
       .ref("/currentGame")
       .push()
@@ -52,8 +56,10 @@ $(document).ready(function() {
   database.ref("/currentGame").on("value", function(snapshot) {
     snapshot.forEach(function(childSnapshot) {
       if (
-        childSnapshot.val().opponentName === sessionStorage.getItem("player") ||
-        childSnapshot.val().playerName === sessionStorage.getItem("player")
+        (childSnapshot.val().opponentName === sessionStorage.getItem("player") ||
+        childSnapshot.val().playerName === sessionStorage.getItem("player")) 
+        // &
+        // (gameInProgress)
       ) {
         console.log("Matched");
         sessionStorage.setItem("gameId", childSnapshot.key);
@@ -76,7 +82,9 @@ $(document).ready(function() {
         if (gameStarted) {
           gameStarted = false;
           console.log("About to open a new Window");
-          // window.open("game.html", "_blank");
+          // window.open("./../../game.html");
+          window.open("./game.html", "_self")
+          // window.open("https://www.google.com")
         }
       }
     });
