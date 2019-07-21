@@ -16,6 +16,7 @@ var gameInProgress = false;
 console.log("Connected to DB");
 //****************************************************************************** */
 $(document).ready(function() {
+  // When a new player is added, make an entry in onlinePlayerList database
   $("#add-player").on("click", function() {
     console.log("Clicked Add Player");
     event.preventDefault();
@@ -30,17 +31,19 @@ $(document).ready(function() {
         playerStatus: "Available",
         gamesWon: 0
       });
+    //Since a player has beed added using current window, disable join option till the current player leaves
     $("#add-player").attr("disabled", true);
   });
 
+  // When a new player joins, refresh all windows to reflect the new user in the "Online Players" list
   database.ref("/onlinePlayerList").on("child_added", function(snapshot) {
     var latestPlayer = snapshot.val();
     displayonlinePlayers(latestPlayer);
   });
 
+  //This is for choosing the opponent. This will initiate a new game by making an entry in currentGame table
   $("body").on("click", ".playerbutton", function() {
-    // beginGame(currentPlayer , $(this).attr("buttonname"))
-    console.log("Clicked Player Button")
+    console.log("Clicked Player Button");
     gameInProgress = true;
 
     database
@@ -53,21 +56,25 @@ $(document).ready(function() {
       });
   });
 
+  //When current game gets an update, update player status, initiate a new game and launch game.html
   database.ref("/currentGame").on("value", function(snapshot) {
     snapshot.forEach(function(childSnapshot) {
+      //Perform the below actions only in the windows for the player and opponent of that particular game
       if (
-        (childSnapshot.val().opponentName === sessionStorage.getItem("player") ||
-        childSnapshot.val().playerName === sessionStorage.getItem("player")) 
-        // &
-        // (gameInProgress)
+        childSnapshot.val().opponentName === sessionStorage.getItem("player") ||
+        childSnapshot.val().playerName === sessionStorage.getItem("player")
       ) {
         console.log("Matched");
+        //Store the gameId in session storage
         sessionStorage.setItem("gameId", childSnapshot.key);
+
+        //Show names of player and opponent
         $("#player-list").text(
           childSnapshot.val().playerName +
             " vs " +
             childSnapshot.val().opponentName
         );
+        //Change player status from "Available" to "Game in Progress"
         setPlayerStatus(
           childSnapshot.val().playerName,
           "Game In Progress",
@@ -78,14 +85,8 @@ $(document).ready(function() {
           "Game In Progress",
           true
         );
-        var gameStarted = true;
-        if (gameStarted) {
-          gameStarted = false;
-          console.log("About to open a new Window");
-          // window.open("./../../game.html");
-          window.open("./game.html", "_self")
-          // window.open("https://www.google.com")
-        }
+        console.log("About to open a new Window");
+        window.open("./game.html", "_self");
       }
     });
   });

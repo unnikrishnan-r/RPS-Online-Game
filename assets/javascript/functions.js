@@ -1,9 +1,14 @@
+//This file will have all the function definition used in index.html and game.html
+
+//When a new player joins, display on the screen as "Online Players".
+//Invoked from index.html (during page load and when new user joins)
 function displayonlinePlayers(latestPlayer) {
   currentPlayer = sessionStorage.getItem("player");
   addPlayerToList(latestPlayer);
   setPlayerStatus(latestPlayer.playerName, latestPlayer.playerStatus, false);
 }
 
+//Shows the player on the screen, along with status of the player and games won count
 function addPlayerToList(latestPlayer) {
   $("tbody").append(
     $("<tr>")
@@ -30,6 +35,8 @@ function addPlayerToList(latestPlayer) {
   );
 }
 
+//Updates the player status on the firebase DB if the argument updateDataBase is true. 
+//Also shows the player status on screen as a clickable button
 function setPlayerStatus(playerName, playerStatus, updateDatabase) {
   if (playerStatus == "Available") {
     $('[status="' + playerStatus + '"]').addClass("btn-success");
@@ -55,32 +62,23 @@ function setPlayerStatus(playerName, playerStatus, updateDatabase) {
   }
 }
 
+//Based on the sessionstorage, hides the opponents play area on the browser window.
+//The user who chooses the opponent is refered as player and the 2nd user as opponent
+//On one browser window, choices to make a guess is shown only for user owning that window
 function displayPlayersArea(playerName, opponentName) {
   if (sessionStorage.getItem("player") == playerName) {
-    $(".player-name").text(playerName);
-    $(".player-message").text("Take your Pick...");
-
-    $(".opponent-name").text(opponentName);
     $(".opponent-choices").css("visibility", "hidden");
-    $(".opponent-message").text("Take your Pick...");
   } else {
-    $(".player-name").text(playerName);
-    $(".player-message").text("Take your Pick...");
     $(".player-choices").css("visibility", "hidden");
-
-    $(".opponent-name").text(opponentName);
-    $(".opponent-message").text("Take your Pick...");
   }
 
-  // var timer = 15;
-
-  // var interval = setInterval(function() {
-  //     timer--;
-  //     $('.player-timer').text(timer);
-  //     if (timer === 0) clearInterval(interval);
-  // }, 1000);
+  $(".player-name").text(playerName);
+  $(".opponent-name").text(opponentName);
+  $(".player-message").text("Take your Pick...");
+  $(".opponent-message").text("Take your Pick...");
 }
 
+//Based on which user made a choice, the choice is recorded in the database
 function recordGameScore(currentRound, role, gameId, choice) {
   console.log("Beginning to Record score");
   if (role == "player") {
@@ -98,20 +96,17 @@ function recordGameScore(currentRound, role, gameId, choice) {
   }
 }
 
+//Invoked from game.html after player and opponent has been selected,.
 function loadCurrentGame(gameId) {
   console.log("Loading Current Round");
   currentGame++;
   currentRound = "round" + currentGame;
-  console.log("Current Round :" + currentRound);
   roundEvaluated = false;
 
   database
     .ref("/currentGame")
     .child(gameId)
     .once("value", function(snapshot) {
-      console.log("Going to load the game");
-      console.log(snapshot.val());
-      console.log("Display Game Area");
       displayPlayersArea(
         snapshot.val().playerName,
         snapshot.val().opponentName
@@ -119,6 +114,8 @@ function loadCurrentGame(gameId) {
     });
 }
 
+//After both user's choices are recorded, this function evaluates and returns a value indicating the winner
+// 0 - Tie ; 1 - Player Wins ; 2 - Opponent Wins
 function evaluateChoices(playerChoice, opponentChoice) {
   var rock = "rock";
   var paper = "paper";
@@ -153,6 +150,7 @@ function evaluateChoices(playerChoice, opponentChoice) {
   }
 }
 
+//Updates the winner of the current round. Also displays appopriate messages on screen
 function updateRoundWinner(result, gameId, currentRound) {
   console.log("Updating Round Results " + sessionStorage.getItem("player"));
   database
@@ -204,6 +202,7 @@ function updateRoundWinner(result, gameId, currentRound) {
       break;
   }
 
+  //If a user scores 3 wins, the game is over. Else the next round begins are 3 seconds
   if (playerWinCount == 3 || opponentWinCount == 3) {
     handleGameOver(gameId, playerWinCount, opponentWinCount);
     $(".game-over-message").text("GAME OVER!!!");
@@ -212,6 +211,7 @@ function updateRoundWinner(result, gameId, currentRound) {
   }
 }
 
+//Uses a timeout function to wait for 3 seconds before asking next question
 function waitAndBeginNextRound(gameId) {
   setTimeout(function() {
     $(".player-choice-image").removeClass("redborder");
@@ -220,6 +220,7 @@ function waitAndBeginNextRound(gameId) {
   }, 3000);
 }
 
+//When game is over, updates the gamesWon attribute for the winner ad player status back to "Available"
 function handleGameOver(gameId, playerWinCount, opponentWinCount) {
   console.log("Handle Game Over");
   database
@@ -238,7 +239,7 @@ function handleGameOver(gameId, playerWinCount, opponentWinCount) {
       setPlayerStatus(snapshot.val().opponentName, "Available", true);
     });
 
-
+//Upeates gamesWon count on onlinePlayerList DB
   function updateGamesWon(winnerName) {
     console.log("Update Games Won for Winner");
 

@@ -20,10 +20,13 @@ var roundEvaluated = false;
 $(document).ready(function() {
   loadCurrentGame(sessionStorage.getItem("gameId"));
 
+  //When player clicks a image to make his choice
   $(".player-choice-image").on("click", function() {
     console.log("Clicked Player choice " + $(this).attr("imagename"));
+    //Highlights the choice using a redborder
     $(this).addClass("redborder");
     $(".player-message").text("Choice Made...");
+    //Record the choice in database
     recordGameScore(
       "round" + currentGame,
       "player",
@@ -32,6 +35,7 @@ $(document).ready(function() {
     );
   });
 
+  //Works exactly same way as previous block of code for click event on player-choice-image
   $(".opponent-choice-image").on("click", function() {
     console.log("Clicked Opponent choice " + $(this).attr("imagename"));
     $(this).addClass("redborder");
@@ -44,35 +48,30 @@ $(document).ready(function() {
     );
   });
 
+  //When a record on the currentGame table changes
   database.ref("currentGame").on("child_changed", function(snapshot) {
-    console.log(snapshot.val());
-    console.log(roundEvaluated);
+    //Check if the game that changed matches the game that in progress.
+    //Also check if the update is because of the winner for the round is being recorded.
+
     if ((sessionStorage.getItem("gameId") == snapshot.key) & !roundEvaluated) {
       console.log("Detected an update on current game");
+      //If both users have made their choice
       if (snapshot.val().hasOwnProperty(currentRound)) {
         if (
           snapshot.val()[currentRound].hasOwnProperty("playerChoice") &
           snapshot.val()[currentRound].hasOwnProperty("opponentChoice")
         ) {
           console.log("Both choices made, going to evaluate");
+          //Evaluate the choices to determine the winner
           var result = evaluateChoices(
             snapshot.val()[currentRound]["playerChoice"],
             snapshot.val()[currentRound]["opponentChoice"]
           );
 
+          //Mark that round has been evaluated so that below update does not cause infinite looping
           roundEvaluated = true;
 
-          switch (result) {
-            case 0:
-              console.log("Game is a Tie");
-              break;
-            case 1:
-              console.log("Player 1 is Winner");
-              break;
-            case 2:
-              console.log("Opponent is a Winner");
-              break;
-          }
+          //Store the winner of the current round
           updateRoundWinner(
             result,
             sessionStorage.getItem("gameId"),
