@@ -62,10 +62,10 @@ function displayPlayersArea(playerName, opponentName) {
 
     $(".opponent-name").text(opponentName);
     $(".opponent-choices").css("visibility", "hidden");
-    $(".opponent-message").text("Waiting for " + playerName + "'s pick...");
+    $(".opponent-message").text("Take your Pick...");
   } else {
     $(".player-name").text(playerName);
-    $(".player-message").text("Waiting for " + opponentName + "'s pick...");
+    $(".player-message").text("Take your Pick...");
     $(".player-choices").css("visibility", "hidden");
 
     $(".opponent-name").text(opponentName);
@@ -82,6 +82,7 @@ function displayPlayersArea(playerName, opponentName) {
 }
 
 function recordGameScore(currentRound, role, gameId, choice) {
+  console.log("Beginning to Record score");
   if (role == "player") {
     database
       .ref("/currentGame")
@@ -98,6 +99,12 @@ function recordGameScore(currentRound, role, gameId, choice) {
 }
 
 function loadCurrentGame(gameId) {
+  console.log("Loading Current Round");
+  currentGame++;
+  currentRound = "round" + currentGame;
+  console.log("Current Round :" + currentRound);
+  roundEvaluated = false;
+
   database
     .ref("/currentGame")
     .child(gameId)
@@ -109,8 +116,6 @@ function loadCurrentGame(gameId) {
         snapshot.val().playerName,
         snapshot.val().opponentName
       );
-      currentGame++;
-      currentRound = "round" + currentGame;
     });
 }
 
@@ -121,7 +126,6 @@ function evaluateChoices(playerChoice, opponentChoice) {
 
   if (playerChoice === opponentChoice) {
     return 0;
-    console.log("Game is a Tie");
   } else {
     if (playerChoice === rock) {
       if (opponentChoice === scissors) {
@@ -150,6 +154,7 @@ function evaluateChoices(playerChoice, opponentChoice) {
 }
 
 function updateRoundWinner(result, gameId, currentRound) {
+  console.log("Updating Round Results " + sessionStorage.getItem("player"));
   database
     .ref("/currentGame")
     .child(gameId)
@@ -157,17 +162,94 @@ function updateRoundWinner(result, gameId, currentRound) {
     .update({ result: result });
 
   switch (result) {
+    case 0:
+      tieCount++;
+      $(".player-message").text("TIE!!!");
+      $(".opponent-message").text("TIE!!!");
+      break;
+
     case 1:
-      $(".player-star-1").addClass("winning-star");
+      playerWinCount++;
+      console.log("Player Win Count :" + playerWinCount);
+      switch (playerWinCount) {
+        case 1:
+          $(".player-star-1").addClass("winning-star");
+          break;
+        case 2:
+          $(".player-star-2").addClass("winning-star");
+          break;
+        case 3:
+          $(".player-star-3").addClass("winning-star");
+          break;
+      }
       $(".player-message").text("You Won this round!!");
       $(".opponent-message").text("Sorry, you lost..");
-
       break;
 
     case 2:
-      $(".opponent-star-1").addClass("winning-star");
+      opponentWinCount++;
+      switch (opponentWinCount) {
+        case 1:
+          $(".opponent-star-1").addClass("winning-star");
+          break;
+        case 2:
+          $(".opponent-star-2").addClass("winning-star");
+          break;
+        case 3:
+          $(".opponent-star-3").addClass("winning-star");
+          break;
+      }
       $(".opponent-message").text("You Won this round!!");
       $(".player-message").text("Sorry, you lost..");
       break;
+  }
+
+  if (playerWinCount == 3 || opponentWinCount == 3) {
+    handleGameOver(gameId, playerWinCount, opponentWinCount);
+    $(".game-over-message").text("GAME OVER!!!");
+  } else {
+    waitAndBeginNextRound(gameId);
+  }
+}
+
+function waitAndBeginNextRound(gameId) {
+  setTimeout(function() {
+    $(".player-choice-image").removeClass("redborder");
+    $(".opponent-choice-image").removeClass("redborder");
+    loadCurrentGame(gameId);
+  }, 3000);
+}
+
+function handleGameOver(gameId, playerWinCount, opponentWinCount) {
+  console.log("Handle Game Over");
+  database
+    .ref("/currentGame")
+    .child(gameId)
+    .once("value", function(snapshot) {
+      if (playerWinCount == 3) {
+        snapshot.ref.update({ winner: snapshot.val().playerName });
+        var winnerName = snapshot.val().playerName;
+      } else {
+        snapshot.ref.update({ winner: snapshot.val().opponentName });
+        var winnerName = snapshot.val().opponentName;
+      }
+      updateGamesWon(winnerName);
+      setPlayerStatus(snapshot.val().playerName, "Available", true);
+      setPlayerStatus(snapshot.val().opponentName, "Available", true);
+    });
+
+
+  function updateGamesWon(winnerName) {
+    console.log("Update Games Won for Winner");
+
+    database
+      .ref("/onlinePlayerList")
+      .orderByChild("playerName")
+      .equalTo(winnerName)
+      .once("value", function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          childSnapshot.ref.update({ gamesWon: childSnapshot.val().gamesWon + 1 });
+        });
+      });
   }
 }

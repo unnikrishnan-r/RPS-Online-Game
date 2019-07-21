@@ -18,9 +18,6 @@
     margin: 40px;
 }
 
-.scoring-icon-hidden{
-    visibility: hidden;
-}
 .player-choice-image, .opponent-choice-image {
     width: 8vw;
     height: 6vw;
@@ -35,7 +32,7 @@
     /* padding: 10px; */
 }
 
-.gameTitle {
+.gameTitle, .game-over-message {
     font-family: 'Alfa Slab One', cursive;
     font-size: 40px;
     text-align: center;

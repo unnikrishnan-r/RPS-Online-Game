@@ -60,14 +60,12 @@
                 </div>
             </div>
 
-
-
             <div class="row justify-content-center">
-                <div class="col col-sm-5 player-area justify-content-center">
+                <div class="col col-sm-6 player-area justify-content-center">
                     <div class="row justify-content-center">
                         <span class="player-name"></span>
                     </div>
-                    <div class=" row justify-content-center">
+                    <div class=" row justify-content-center player-scoring">
                         <div class="col col-sm-2  justify-content-center">
                             <span class="fa-stack fa-lg player-star-1">
                                 <i class="fa fa-circle fa-stack-2x player-star-1"></i>
@@ -77,22 +75,22 @@
                         <div class="col col-sm-2  justify-content-center">
                             <span class="fa-stack fa-lg player-star-2 ">
                                 <i class="fa fa-circle fa-stack-2x player-star-2 "></i>
-                                <i class="fa fa-star fa-stack-1x fa-inverse player-star-2 "></i>
+                                <i class="fa fa-star fa-stack-1x fa-inverse"></i>
                             </span>
                         </div>
                         <div class="col col-sm-2   justify-content-center">
                             <span class="fa-stack fa-lg player-star-3">
                                 <i class="fa fa-circle fa-stack-2x player-star-3"></i>
-                                <i class="fa fa-star fa-stack-1x fa-inverse player-star-3"></i>
+                                <i class="fa fa-star fa-stack-1x fa-inverse"></i>
                             </span>
 
                         </div>
 
                     </div>
+
                     <div class="row player-choices justify-content-center">
                         <div class="col col-sm-4 player-rock">
-                            <img src="./assets/images/rock.svg" class="player-choice-image  "
-                                imagename="rock">
+                            <img src="./assets/images/rock.svg" class="player-choice-image  " imagename="rock">
                         </div>
                         <div class="col col-sm-4 player-paper">
                             <img src="./assets/images/paper.svg" class="player-choice-image img-fluid rounded "
@@ -106,25 +104,19 @@
                         </div>
                     </div>
 
-                    <div class="row player-timer justify-content-center">
-                        <div class="col col-sm-12">
-                            <div class="player-timer">15</div>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center">
+                    <div class="row justify-content-center round-message">
                         <span class="player-message"></span>
                     </div>
 
 
                 </div>
 
-                <div class="col col-sm-2"></div>
-
-                <div class="col col-sm-5 opponent-area justify-content-center">
+                <div class="col col-sm-6 opponent-area justify-content-center">
                     <div class="row justify-content-center">
                         <span class="opponent-name"></span>
                     </div>
-                    <div class=" row justify-content-center">
+
+                    <div class=" row justify-content-center opponent-scoring">
                         <div class="col col-sm-2   justify-content-center">
                             <span class="fa-stack fa-lg opponent-star-1">
                                 <i class="fa fa-circle fa-stack-2x opponent-star-1"></i>
@@ -146,10 +138,10 @@
                         </div>
 
                     </div>
+
                     <div class="row opponent-choices justify-content-center">
                         <div class="col col-sm-4 opponent-rock">
-                            <img src="./assets/images/rock.svg" class="opponent-choice-image"
-                                imagename="rock">
+                            <img src="./assets/images/rock.svg" class="opponent-choice-image" imagename="rock">
                         </div>
                         <div class="col col-sm-4 opponent-paper">
                             <img src="./assets/images/paper.svg" class="opponent-choice-image img-fluid rounded "
@@ -163,16 +155,17 @@
                         </div>
                     </div>
 
-                    <div class="row opponent-timer justify-content-center">
-                        <div class="col col-sm-12">
-                            <div class="opponent-timer">15</div>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center">
+                    <div class="row justify-content-center round-message">
                         <span class="opponent-message"></span>
                     </div>
 
 
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col col-sm-12">
+                    <span class="game-over-message"></span>
                 </div>
             </div>
         </div>
