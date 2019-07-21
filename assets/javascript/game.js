@@ -60,34 +60,42 @@ $(document).ready(function() {
   database.ref("/currentGame").on("value", function(snapshot) {
     snapshot.forEach(function(childSnapshot) {
       //Perform the below actions only in the windows for the player and opponent of that particular game
-      if (
-        childSnapshot.val().opponentName === sessionStorage.getItem("player") ||
-        childSnapshot.val().playerName === sessionStorage.getItem("player")
-      ) {
-        console.log("Matched");
-        //Store the gameId in session storage
-        sessionStorage.setItem("gameId", childSnapshot.key);
+      if (childSnapshot.val().gameStatus != "closed") {
+        if (
+          (childSnapshot.val().opponentName ===
+            sessionStorage.getItem("player") ||
+            childSnapshot.val().playerName ===
+              sessionStorage.getItem("player")) &
+          !sessionStorage.getItem("returnToGame")
+        ) {
+          console.log("Matched");
+          //Store the gameId in session storage
+          sessionStorage.setItem("gameId", childSnapshot.key);
 
-        //Show names of player and opponent
-        $("#player-list").text(
-          childSnapshot.val().playerName +
-            " vs " +
-            childSnapshot.val().opponentName
-        );
-        //Change player status from "Available" to "Game in Progress"
-        setPlayerStatus(
-          childSnapshot.val().playerName,
-          "Game In Progress",
-          true
-        );
-        setPlayerStatus(
-          childSnapshot.val().opponentName,
-          "Game In Progress",
-          true
-        );
-        console.log("About to open a new Window");
-        window.open("./game.html", "_self");
+          //Show names of player and opponent
+          $("#player-list").text(
+            childSnapshot.val().playerName +
+              " vs " +
+              childSnapshot.val().opponentName
+          );
+          //Change player status from "Available" to "Game in Progress"
+          setPlayerStatus(
+            childSnapshot.val().playerName,
+            "Game In Progress",
+            true
+          );
+          setPlayerStatus(
+            childSnapshot.val().opponentName,
+            "Game In Progress",
+            true
+          );
+          console.log("About to open a new Window");
+          setTimeout(function() {
+            window.open("./game.html", "_self");
+          }, 2000);
+        }
       }
     });
+    sessionStorage.removeItem("returnToGame");
   });
 });

@@ -228,10 +228,10 @@ function handleGameOver(gameId, playerWinCount, opponentWinCount) {
     .child(gameId)
     .once("value", function(snapshot) {
       if (playerWinCount == 3) {
-        snapshot.ref.update({ winner: snapshot.val().playerName });
+        snapshot.ref.update({ winner: snapshot.val().playerName , gameStatus : "closed" });
         var winnerName = snapshot.val().playerName;
       } else {
-        snapshot.ref.update({ winner: snapshot.val().opponentName });
+        snapshot.ref.update({ winner: snapshot.val().opponentName  , gameStatus : "closed"});
         var winnerName = snapshot.val().opponentName;
       }
       updateGamesWon(winnerName);
@@ -252,5 +252,12 @@ function handleGameOver(gameId, playerWinCount, opponentWinCount) {
           childSnapshot.ref.update({ gamesWon: childSnapshot.val().gamesWon + 1 });
         });
       });
+
+      sessionStorage.removeItem("gameId");
+      sessionStorage.setItem("returnToGame" , true)
+      setTimeout(function() {
+        window.open("./index.html", "_self");
+      }, 3000);
+    
   }
 }
