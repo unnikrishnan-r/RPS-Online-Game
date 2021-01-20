@@ -7,7 +7,7 @@ Rock Paper Scissors game played online built using basic jQuery, HTML, CSS and F
 
   
 
-Demo of the game is available in youtube by clicking this [link](https://www.youtube.com/watch?v=Kg3KoGJAYlc)
+Demo of the game is available in youtube by clicking this [link](https://youtu.be/xSMPJvRYdgc)
 
 [![](http://img.youtube.com/vi/Kg3KoGJAYlc/0.jpg)](http://www.youtube.com/watch?v=Kg3KoGJAYlc  "Rock Paper Scissors online game!!!")
 
